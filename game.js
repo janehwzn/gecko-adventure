@@ -28,7 +28,7 @@ let entities = [];  // {kind, x, ...}
 let particles = [];
 let clouds = [];
 let tufts = [];
-let speed = 300, elapsed = 0, score = 0, spawnT = 1.2, lastSpawnX = -9999;
+let speed = 300, elapsed = 0, score = 0, spawnT = 1.2;
 let shake = 0, bgX = 0, duneX1 = 0, duneX2 = 0;
 let best = parseInt(localStorage.getItem('geckoBest') || '0', 10) || 0;
 let muted = localStorage.getItem('geckoMuted') === '1';
@@ -141,8 +141,10 @@ function initScenery() {
 function spawnPattern() {
   const x = W + 90;
   const minGap = 430;
-  if (x - lastSpawnX < minGap) { spawnT = 0.18; return; }
-  lastSpawnX = x;
+  // 用现存实体里最靠右的位置来判断间距（之前这里有个 bug：只刷第一只障碍物）
+  let rightMost = -9999;
+  for (const e of entities) if (e.x > rightMost) rightMost = e.x;
+  if (x - rightMost < minGap) { spawnT = 0.18; return; }
   const r = Math.random();
   if (r < 0.30) {
     entities.push({ kind: 'axe', x, spin: 0 });
@@ -242,7 +244,7 @@ function startGame() {
   initAudio();
   state = 'play';
   entities = []; particles = [];
-  speed = 300; elapsed = 0; score = 0; spawnT = 1.0; lastSpawnX = -9999;
+  speed = 300; elapsed = 0; score = 0; spawnT = 1.0;
   player.x = Math.min(130, player.xMax); player.tx = player.x;
   player.py = 0; player.vy = 0; player.onGround = true;
   player.crawl = 0; player.inv = 0; player.hearts = 3;
