@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>小壁虎大冒险 🦎</title>
+<meta name="theme-color" content="#58b368">
+<meta name="description" content="帮小壁虎躲开斧头和骷髅，吃掉萤火虫！上滑跳，下滑爬，左右移动。">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="game"></canvas>
+
+<div id="hud">
+  <div id="score">0</div>
+  <div id="hearts">❤️❤️❤️</div>
+</div>
+<button id="mute" aria-label="声音开关">🔊</button>
+<div id="flash"></div>
+
+<div id="menu" class="overlay">
+  <div class="card">
+    <div class="logo">🦎</div>
+    <h1>小壁虎大冒险</h1>
+    <p class="sub">帮小壁虎躲开危险，吃掉萤火虫！</p>
+    <ul class="how">
+      <li>👆 <b>上滑 / 轻点</b>：跳起来 —— 躲斧头 🪓</li>
+      <li>👇 <b>下滑</b>：贴地爬 —— 躲骷髅 💀</li>
+      <li>👈👉 <b>左右滑</b>：后退 / 前进</li>
+      <li>✨ 吃萤火虫加分，🕸️ 小心蜘蛛网的缺口！</li>
+    </ul>
+    <button id="startBtn" class="big">开始游戏</button>
+    <p class="best">最高分：<span id="bestMenu">0</span></p>
+  </div>
+</div>
+
+<div id="over" class="overlay hidden">
+  <div class="card">
+    <div class="logo">💥</div>
+    <h1>游戏结束</h1>
+    <p class="scoreLine">得分 <b id="finalScore">0</b></p>
+    <p class="best">最高分：<span id="bestOver">0</span> <span id="newBest" class="hidden">🎉 新纪录！</span></p>
+    <button id="againBtn" class="big">再来一局</button>
+  </div>
+</div>
+
+<script src="game.js"></script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function () {});
+  });
+}
+</script>
+</body>
+</html>
