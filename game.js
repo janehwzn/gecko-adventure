@@ -435,17 +435,29 @@ function drawGecko() {
 function drawEntities() {
   for (const e of entities) {
     if (e.kind === 'axe') {
+      // 深色底盘 + 放大，让斧头在亮背景上更醒目
+      ctx.fillStyle = 'rgba(46,28,28,0.88)';
+      ctx.beginPath(); ctx.arc(e.x, gy - 26, 42, 0, 7); ctx.fill();
+      ctx.lineWidth = 5; ctx.strokeStyle = '#ff5252';
+      ctx.beginPath(); ctx.arc(e.x, gy - 26, 42, 0, 7); ctx.stroke();
       ctx.save();
       ctx.translate(e.x, gy - 26);
       ctx.rotate(e.spin);
-      ctx.font = '52px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillText('🪓', 0, 0);
+      ctx.font = '72px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('🪓', 0, 2);
       ctx.restore();
     } else if (e.kind === 'skull') {
       const bob = Math.sin(e.ph) * 4;
-      ctx.font = '54px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       const heads = e.tall ? [90, 185] : [90];
-      for (const hh of heads) ctx.fillText('💀', e.x, gy - hh + bob);
+      for (const hh of heads) {
+        const sy = gy - hh + bob;
+        ctx.fillStyle = 'rgba(28,28,38,0.88)';
+        ctx.beginPath(); ctx.arc(e.x, sy, 44, 0, 7); ctx.fill();
+        ctx.lineWidth = 5; ctx.strokeStyle = '#f5f5f5';
+        ctx.beginPath(); ctx.arc(e.x, sy, 44, 0, 7); ctx.stroke();
+        ctx.font = '74px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('💀', e.x, sy + 2);
+      }
     } else if (e.kind === 'web') {
       const x0 = e.x - 15;
       ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2.5;
@@ -462,18 +474,24 @@ function drawEntities() {
         ctx.beginPath(); ctx.moveTo(x0 - 2, wy); ctx.lineTo(x0 + 32, wy); ctx.stroke();
       }
       // 缺口提示箭头
-      ctx.font = '22px serif'; ctx.textAlign = 'center';
+      ctx.font = '30px serif'; ctx.textAlign = 'center';
       ctx.fillText(e.top ? '⬆️' : '⬇️', e.x, (gapTopY + gapBotY) / 2 + 8);
     } else if (e.kind === 'fly') {
       const fy = gy - e.h + Math.sin(e.ph) * 6;
-      const gl = ctx.createRadialGradient(e.x, fy, 1, e.x, fy, 22);
-      gl.addColorStop(0, 'rgba(255,245,160,.95)');
-      gl.addColorStop(0.4, 'rgba(255,235,120,.45)');
-      gl.addColorStop(1, 'rgba(255,235,120,0)');
+      const pulse = 1 + Math.sin(e.ph * 2.3) * 0.18;
+      const gl = ctx.createRadialGradient(e.x, fy, 2, e.x, fy, 44 * pulse);
+      gl.addColorStop(0, 'rgba(255,246,170,.95)');
+      gl.addColorStop(0.35, 'rgba(255,214,64,.6)');
+      gl.addColorStop(1, 'rgba(255,214,64,0)');
       ctx.fillStyle = gl;
-      ctx.beginPath(); ctx.arc(e.x, fy, 22, 0, 7); ctx.fill();
-      ctx.fillStyle = '#fff6b0';
-      ctx.beginPath(); ctx.arc(e.x, fy, 6, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.arc(e.x, fy, 44 * pulse, 0, 7); ctx.fill();
+      // 实心虫身 + 深色描边，在亮背景上也看得清
+      ctx.fillStyle = '#7a5200';
+      ctx.beginPath(); ctx.arc(e.x, fy, 14, 0, 7); ctx.fill();
+      ctx.fillStyle = '#ffe94d';
+      ctx.beginPath(); ctx.arc(e.x, fy, 10.5, 0, 7); ctx.fill();
+      ctx.fillStyle = '#fffde8';
+      ctx.beginPath(); ctx.arc(e.x - 3, fy - 3.5, 3.6, 0, 7); ctx.fill();
     }
   }
 }
