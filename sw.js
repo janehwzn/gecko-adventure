@@ -1,4 +1,4 @@
-const CACHE = 'gecko-v3';
+const CACHE = 'gecko-v4';
 const ASSETS = ['./', './index.html', './style.css', './game.js', './manifest.json', './icon.png'];
 
 self.addEventListener('install', (e) => {
