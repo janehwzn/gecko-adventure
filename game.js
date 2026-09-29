@@ -146,13 +146,10 @@ function spawnPattern() {
   for (const e of entities) if (e.x > rightMost) rightMost = e.x;
   if (x - rightMost < minGap) { spawnT = 0.18; return; }
   const r = Math.random();
-  if (r < 0.30) {
+  if (r < 0.35) {
     entities.push({ kind: 'axe', x, spin: 0 });
-  } else if (r < 0.55) {
+  } else if (r < 0.68) {
     entities.push({ kind: 'skull', x, tall: Math.random() < 0.65, ph: Math.random() * 6 });
-  } else if (r < 0.76) {
-    const top = Math.random() < 0.5;
-    entities.push({ kind: 'web', x, top });
   } else {
     // 萤火虫弧线
     const baseH = 90 + Math.random() * 130;
@@ -204,15 +201,6 @@ function hitTest(e) {
       if (rectsOverlap(pr, r)) return true;
     }
     return false;
-  }
-  if (e.kind === 'web') {
-    // 网帘：从 gy-340 到 gy，缺口高度 gapH，缺口中心 gapC（离地高度）
-    const gapH = e.top ? 130 : 62;
-    const gapC = e.top ? 218 : 31;
-    const gapTop = gapC + gapH / 2, gapBot = gapC - gapH / 2;
-    const upper = { x: e.x - 15, y: gy - 340, w: 30, h: 340 - gapTop };
-    const lower = { x: e.x - 15, y: gy - gapBot, w: 30, h: gapBot };
-    return rectsOverlap(pr, upper) || rectsOverlap(pr, lower);
   }
   return false;
 }
@@ -458,24 +446,6 @@ function drawEntities() {
         ctx.font = '74px serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('💀', e.x, sy + 2);
       }
-    } else if (e.kind === 'web') {
-      const x0 = e.x - 15;
-      ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2.5;
-      const gapH = e.top ? 130 : 62, gapC = e.top ? 218 : 31;
-      const gapTopY = gy - (gapC + gapH / 2), gapBotY = gy - (gapC - gapH / 2);
-      // 网帘竖线（缺口处断开）
-      for (const lx of [x0, x0 + 15, x0 + 30]) {
-        ctx.beginPath(); ctx.moveTo(lx, gy - 340); ctx.lineTo(lx, gapTopY); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(lx, gapBotY); ctx.lineTo(lx, gy); ctx.stroke();
-      }
-      // 横向蛛丝
-      for (let wy = gy - 330; wy < gy; wy += 34) {
-        if (wy > gapTopY - 4 && wy < gapBotY + 4) continue;
-        ctx.beginPath(); ctx.moveTo(x0 - 2, wy); ctx.lineTo(x0 + 32, wy); ctx.stroke();
-      }
-      // 缺口提示箭头
-      ctx.font = '30px serif'; ctx.textAlign = 'center';
-      ctx.fillText(e.top ? '⬆️' : '⬇️', e.x, (gapTopY + gapBotY) / 2 + 8);
     } else if (e.kind === 'fly') {
       const fy = gy - e.h + Math.sin(e.ph) * 6;
       const pulse = 1 + Math.sin(e.ph * 2.3) * 0.18;
